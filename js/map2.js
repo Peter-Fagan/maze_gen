@@ -1,8 +1,11 @@
-Floorplan = function(floor, min_room_size, max_room_size, max_room_number) {
-  // ground = BABYLON.Mesh.CreateGround("ground", 6, 6, 2, scene);
+Map = function(floor, wall, min_room_size, max_room_size, max_room_number) {
 
     this.floors = game.add.group();
     this.floor_image = floor;
+
+    this.walls = game.add.group();
+    this.walls.enableBody = true;
+    this.wall_image = wall;
 
     this.room_min_size = min_room_size;
     this.room_max_size = max_room_size;
@@ -14,48 +17,52 @@ Floorplan = function(floor, min_room_size, max_room_size, max_room_number) {
 
     this.makeMap();
 };
-Floorplan.prototype.getRandom = function(min, max) {
+Map.prototype.getRandom = function(min, max) {
     return Math.floor(Math.random() * (max - min)) + min;
 };
-Floorplan.prototype.Room = function(x, y, w, h) {
-    this.x1 = x;
-    this.y1 = y;
-    this.x2 = x + w;
-    this.y2 = y + h;
-
-    var center_x = (this.x1 + this.x2) / 2;
-    var center_y = (this.y1 + this.y2) / 2;
-    this.center_coords = {x: center_x, y: center_y};
-};
-Floorplan.prototype.createFloor = function(x, y) {
+// Map.prototype.Room = function(x, y, w, h) {
+//     this.x1 = x;
+//     this.y1 = y;
+//     this.x2 = x + w;
+//     this.y2 = y + h;
+//
+//     var center_x = (this.x1 + this.x2) / 2;
+//     var center_y = (this.y1 + this.y2) / 2;
+//     this.center_coords = {x: center_x, y: center_y};
+// };
+Map.prototype.createFloor = function(x, y) {
     fl = this.floors.create(x, y, this.floor_image);
     game.physics.arcade.enable(fl);
-    // ground = BABYLON.Mesh.CreateGround("", 6, 6, 2, scene);
+    game.physics.arcade.overlap(fl, this.walls, function(floor, wall) {
+        wall.destroy();
+    });
 };
-Floorplan.prototype.createRoom = function(x1, x2, y1, y2) {
+Map.prototype.createRoom = function(x1, x2, y1, y2) {
     for (var x = x1; x<x2; x+=16) {
         for (var y = y1; y<y2; y+=16) {
             this.createFloor(x, y);
         }
     }
 };
-Floorplan.prototype.createHTunnel = function(x1, x2, y) {
+Map.prototype.createHTunnel = function(x1, x2, y) {
     var min = Math.min(x1, x2);
     var max = Math.max(x1, x2);
     for (var x = min; x<max+8; x+=8) {
         this.createFloor(x, y);
     }
 };
-Floorplan.prototype.createVTunnel = function(y1, y2, x) {
+Map.prototype.createVTunnel = function(y1, y2, x) {
     var min = Math.min(y1, y2);
     var max = Math.max(y1, y2);
     for (var y = min; y<max+8; y+=8) {
         this.createFloor(x, y);
     }
 };
-Floorplan.prototype.makeMap = function() {
+Map.prototype.makeMap = function() {
     for (var y=0; y<game.world.height; y+= 16) {
         for (var x=0; x<game.world.width; x+=16) {
+            var wall = this.walls.create(x, y, this.wall_image);
+            wall.body.immovable = true;
         }
     }
 

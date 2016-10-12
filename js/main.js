@@ -15,27 +15,28 @@ function create() {
   game.physics.startSystem(Phaser.Physics.ARCADE);
   cursors = game.input.keyboard.createCursorKeys();
 
+  // this.map = new Floorplan('floor', 'wall', 3, 6, 10);
   this.map = new Map('floor', 'wall', 3, 6, 10);
 
-  // walls = game.add.group();
-  // walls.enableBody = true;
-  // wall.body.immovable = true;
-  //
-  //
-  // floors = game.add.group();
-  // roomMax = 10;
-  // roomMin = 5;
-  // roomNum = 10;
-  //
+  walls = game.add.group();
+  walls.enableBody = true;
+  wall.body.immovable = true;
+
+
+  floors = game.add.group();
+  roomMax = 10;
+  roomMin = 5;
+  roomNum = 10;
+
   // player = {};
-  //
+
   // player = game.add.sprite(13, player.x, player.y, "player");
-  //
+
   // player.anchor.setTo(0.5);
   // game.physics.arcade.enable(player);
   // this.player.body.setSize(13, 13);
-  //
-  // createMap();
+
+  createMap();
 
 }
 
@@ -51,7 +52,7 @@ function update() {
   // } else {
   //   player.body.velocity = 0;
   // }
-
+  //
   // if (cursors.up.isDown) {
   //   player.body.velocity.y = -175;
   // } else if (cursors.down.isDown) {
